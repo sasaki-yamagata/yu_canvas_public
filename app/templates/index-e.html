@@ -1,0 +1,115 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-107200450-2"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag(){dataLayer.push(arguments);}
+		gtag('js', new Date());
+
+		gtag('config', 'UA-107200450-2');
+	</script>
+
+	<meta charset="utf-8">
+	<title>Yamagata Chemical Canvas</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+	<img src="{{ url_for('static', filename='image/chemical_canvas_full_banner.png') }}" width="800" alt="Draw & Study, Yamagata Chemical Canvas">
+	<p align="center">Draw & Study, Yamagata Chemical Canvas (0.2 beta)</p>
+	<p align="center">[
+		<a href="#overview">Overview</a> |
+		<a href="#terms-of-use">Terms of Use</a> |
+		<a href="#disclaimer">Disclaimer</a> |
+		<a href="#faq">FAQ</a> |
+		<a href="#authors">Authors</a> |
+		<a href="#acknowledgements">Acknowledgements</a> |
+		<a href="index.html">Japanese</a>
+	]</p>
+	<table class="tool"><tr>
+		<td>
+			<div id="jsme">
+				<br>Now Loading...<br><br>
+				This program uses JavaScript.<br>
+				If loading takes more than a minute, please check if JavaScript is enabled in the browser.
+			</div>
+		</td>
+		<td>
+			<table class="properties">
+				<tr><th colspan="2">Basic Information</th></tr>
+				<tr><td>Chemical Formula</td><td><span id="formula">-</span></td></tr>
+				<tr><td>Molecular Weight</td><td><span id="weight">-</span></td></tr>
+				<tr><th colspan="2">Predicted Properties</th></tr>
+				<tr><td>LUMO</td><td><span id="lumo">-</span></td></tr>
+				<tr><td>HOMO</td><td><span id="homo">-</span></td></tr>
+				<tr><th colspan="2">Energy Diagram</th></tr>
+				<tr><td colspan="2"><canvas id="energy_diagram" width="360" height="180">Energy diagram needs internet browser supporting HTML5.</canvas></td></tr>
+			</table>
+		</td>
+	</tr></table>
+	<div style="margin: 10px;">
+		<h3><a name="overview">Overview</a></h3>
+		<p><i>Yamagata Chemical Canvas</i> is a software for designing functional molecules, developed by <a href="https://matsui-lab.yz.yamagata-u.ac.jp/" target="_blank">Matsui laboratory at Yamagata University, Japan</a>. You can draw molecules in the left-side canvas, and see the predicted properties immediately in the right-side table.</p>
+		<p><b>How to Draw Molecules</b></p>
+		<ol>
+			<li>Choose one of the parts such as benzene ring.</li>
+			<li>Place the part in the white canvas.</li>
+		</ol>
+		<p>See <a href="https://peter-ertl.com/jsme/2013_03/help.html" target="_blank">JSME help page</a> for details.</p>
+		<h3><a name="terms-of-use">Terms of Use</a></h3>
+		<p>Anyone can use this program. However, modification and re-distribution are prohibited.</p>
+		<h3><a name="disclaimer">Disclaimer</a></h3>
+		<p>The validity of the predicted properties is not guaranteed. It is NOT recommended to use the predicted properties for scientific publications. The authors is not responsible for any results from this program.</p>
+		<h3><a name="faq">FAQ</a></h3>
+		<ul>
+			<li>
+				<b>What are LUMO, HOMO, Gap, Vacuum, and HSE?</b><br>
+				LUMO stands for lowest unoccupied molecular orbital, and represents electron affinity.<br>
+				HOMO stands for highest occupied molecular orbital, and represents ionization potential.<br>
+				Gap is the different between LUMO and HOMO, and is related to optical absorption and emission.<br>
+				Vacuum is vacuum level.<br>
+				HSE is hydrogen standard electrode potential in electrochemistry.
+			</li>
+			<li>
+				<b>How does it predict the properties?</b><br>
+				It uses machine learning of artificial intelligence (AI). The details will be published in near future.
+			</li>
+			<li>
+				<b>How accurate the predicted properties are?</b><br>
+				The mean absolute error (MAE) with respect to density functional theory (DFT) calculation of B3LYP/6-31G(d,p) is 0.3 eV at present. Future updates would improve the accuracy.
+			</li>
+			<li>
+				<b>Why does it show "n/a" (not available)?</b><br>
+				This program is under development, and does not support all molecules. Future updates would extend the supported molecules.
+			</li>
+			<li>
+				<b>Can we use the predicted properties for scientific publications?</b><br>
+				It is NOT recommended to use the predicted properties for scientific publications because the validity of the predicted properties is not guaranteed.
+			</li>
+		</ul>
+		<h3><a name="authors">Authors</a></h3>
+		<p>
+			<a href="https://matsui-lab.yz.yamagata-u.ac.jp/" target="_blank">Matsui Laboratory, Research Center for Organic Electronics (ROEL), Yamagata University</a><br>
+			Hiroyuki Matsui, Tomoharu Okada, Yuki Mochizuki, Ren Sasaki<br>
+			E-mail: h-matsui[at]yz.yamagata-u.ac.jp<br>
+			* Please replace [at] with @.
+		</p>
+		<h3><a name="acknowledgements">Acknowledgements</a></h3>
+		<p>This work was supported by JST, CREST, Grand Number JPMJCR18J2.</p>
+		<p>This program uses <a href="https://peter-ertl.com/jsme/" target="_blank">JSME Molecular Editor</a> and <a href="http://partridgejiang.github.io/Kekule.js/" target="_blank">Kekule.js</a>.</p>
+	</div>
+	<footer>
+		<small>&copy; 2021 Yamagata University</small>
+	</footer>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/jsme/jsme.nocache.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/kekule/kekule.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='js/chemical_canvas.js') }}"></script>
+<script>
+	document.getElementById("jsme").innerHTML = "";
+</script>
+</html>

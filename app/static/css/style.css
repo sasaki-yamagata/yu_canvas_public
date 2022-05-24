@@ -1,0 +1,98 @@
+@charset "utf-8";
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+JP:400,700&display=swap&subset=japanese");
+
+head{
+	margin: 0 auto;
+}
+
+body {
+	font-family: "Noto Sans JP", "ヒラギノ角ゴ ProN W3", "Hiragino Kaku Gothic ProN", "メイリオ", Meiryo, sans-serif;
+	width: 800px;
+	margin: 0 auto;
+	padding: 0px;
+}
+
+footer {
+	text-align: center;
+}
+
+.tool {
+	border-spacing: 10px;
+}
+
+#jsme {
+	width: 400px;
+	height: 400px;
+}
+
+.properties {
+	width: 360px;
+	font-size: 18px;
+	border-right: 1px #000000 solid;
+	border-bottom: 1px #000000 solid;
+	border-spacing: 0px;
+}
+
+.properties th {
+	text-align: center;
+	border-left: 1px #000000 solid;
+	border-top: 1px #000000 solid;
+}
+
+.properties td {
+	text-align: center;
+	width: 50%;
+	border-left: 1px #000000 solid;
+	border-top: 1px #000000 solid;
+}
+
+h1 {
+	font-size: 24px;
+	font-weight: bold;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	padding: 10px 0 10px 20px;
+	color: #ffffff;
+	background-color: #000080;
+}
+
+h2 {
+	font-size: 22px;
+	font-weight: bold;
+	margin-top: 0px;
+	margin-bottom: 15px;
+	padding: 10px 0 10px 20px;
+	color: #000080;
+	border-top: 1.5px #000080 solid;
+	border-left: 10px #000080 solid;
+	border-right: 1.5px #000080 solid;
+	border-bottom: 1.5px #000080 solid;
+}
+
+h3 {
+	font-size: 18px;
+	font-weight: bold;
+	margin-top: 20px;
+	margin-bottom: 3px;
+}
+
+p {
+	margin: 4px 4px 4px 12px;
+}
+
+ul, ol {
+	margin: 5px;
+	padding: 0px;
+}
+
+li {
+	margin-left: 30px;
+	margin-bottom: 5px;
+	list-style: square;
+}
+
+#index_smiles {
+	font-size: 2px;
+
+}
+
