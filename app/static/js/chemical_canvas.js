@@ -61,11 +61,9 @@ function updatePrediction(event) {
 				// 成功した時の処理
 				success: function(response) {
 						let pre_orb = response
-						console.log(pre_orb)
 								// predict HOMO and LUMO energies
 						let level = 2;
 								// 仮定義
-						console.log(pre_orb)
 						let homo = pre_orb['homo'] * -1
 						let lumo = pre_orb['lumo'] * -1
 						if (isNaN(lumo)) {
