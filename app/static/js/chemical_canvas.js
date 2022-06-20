@@ -5,6 +5,7 @@
 function jsmeOnLoad() {
 	jsmeApplet = new JSApplet.JSME("jsme", "400px", "400px", {"options" : "oldlook,star"});
 	jsmeApplet.setAfterStructureModifiedCallback(updatePrediction);
+	// console.log(jsmeApplet.molFile())
 }
 
 
@@ -12,7 +13,7 @@ function jsmeOnLoad() {
 function updatePrediction(event) {
 
 	const mol = Kekule.IO.loadFormatData(event.src.molFile(false), 'mol');
-	// showMolecule(mol)
+	
 
 	// 原子の数が０の時とそうでないとき
 	if (mol.getNodeCount() == 0) {
@@ -37,6 +38,7 @@ function updatePrediction(event) {
 		// const weak_atom = weakAtomList(mol, weak_bond)
 		// 木構造の記述子作成
 		const symbols = symbolArray(mol);
+
 		const neighbors = neighborIndexArray(mol);
 		const desc1 = nextLevelExpressionArray(symbols, symbols, neighbors, false);
 		const featureValues1 = descriptorCounts(desc1);
@@ -44,47 +46,55 @@ function updatePrediction(event) {
 		const featureValues2 = descriptorCounts(desc2);
 
 		// フラグメントの記述子作成
-		const fsmiles = fragmentList(mol, max_ring=8)
+		const fsmiles = fragmentList(mol)
 		const featureValuesFrag = descriptorCounts(fsmiles)
 
 		// 木構造とフラグメントの記述子を合わせる
+		console.log(featureValuesFrag)
 		const feature = {...featureValues2, ...featureValuesFrag}
 		feature['weight'] = weight
-		console.log(feature)
 		// pythonにデータを送信
+		const molfile = new Object
+		molfile.molfile = event.src.molFile()
 		$.ajax({
-				type: "POST",
-				url: "/model",
-				data: feature, // post a json data.
-				async: false,
-				dataType: "json",
-				// 成功した時の処理
-				success: function(response) {
-						let pre_orb = response
-								// predict HOMO and LUMO energies
-						let level = 2;
-								// 仮定義
-						let homo = pre_orb['homo'] * -1
-						let lumo = pre_orb['lumo'] * -1
-						if (isNaN(lumo)) {
-							// document.getElementById("level").innerHTML = "n/a";
-							document.getElementById("lumo").innerHTML = "n/a";
-							document.getElementById("homo").innerHTML = "n/a";
-						} else {
-							// document.getElementById("level").innerHTML = level;
-							document.getElementById("lumo").innerHTML = lumo.toFixed(1) + " eV";
-							document.getElementById("homo").innerHTML = homo.toFixed(1) + " eV";
-						}
-						// update energy diagram
-						updateEnergyDiagram(lumo, homo);
-						// Receive incremented number.
-				}, 
-				// 失敗した時の処理
-				error: function(error) {
-						console.log("Error occurred in keyPressed().");
-						console.log(error);
+			type: "POST",
+			url: "/model",
+			data: molfile, // post a json data.
+			async: false,
+			dataType: "json",
+			// 成功した時の処理
+			success: function(response) {
+				let pre_orb = response
+				
+						// predict HOMO and LUMO energies
+				let level = 2;
+						// 仮定義
+				let homo = pre_orb['homo'] * -1
+				let lumo = pre_orb['lumo'] * -1
+				let rate = pre_orb['rate']
+				
+				if (isNaN(lumo)) {
+					// document.getElementById("level").innerHTML = "n/a";
+					document.getElementById("lumo").innerHTML = "n/a";
+					document.getElementById("homo").innerHTML = "n/a";
+					document.getElementById("rate").innerHTML = "n/a"
+				} else {
+					// document.getElementById("level").innerHTML = level;
+					document.getElementById("lumo").innerHTML = lumo.toFixed(1) + " eV";
+					document.getElementById("homo").innerHTML = homo.toFixed(1) + " eV";
+					document.getElementById("rate").innerHTML = rate.toFixed(1) + " %";
 				}
-			})
+				// update energy diagram
+				updateEnergyDiagram(lumo, homo);
+				// Receive incremented number.
+
+			}, 
+			// 失敗した時の処理
+			error: function(error) {
+					console.log("Error occurred in keyPressed().");
+					console.log(error);
+			}
+		})
 	}
 }
 
@@ -196,15 +206,16 @@ function fragmentList(mol, max_ring=8) {
 
 	// 単結合を weak_bonds に追加
 	const connect_count = mol.getConnectorCount();
-
+	
 	for (let i = 0; i < connect_count; i++) {
 		const connector = mol.getConnectorAt(i);
 		if (connector.getBondOrder() == 1) {
 			weak_bonds.add(connector);
+			
 		}	
 	}
 	const rings = mol.findAllRings();
-
+	
 	// max_ring 以下の環に含まれる結合は weak_bonds から除外
 	for (let i = 0, l = rings.length; i < l; ++i)
 	{
@@ -213,12 +224,14 @@ function fragmentList(mol, max_ring=8) {
 		if (connectorCount <= max_ring) {
 			for (let x = 0, y = connectorCount; x < y; ++x ) {
 				let b = ring.connectors[x];
-
+				
 				if (weak_bonds.has(b)) {
+			
 					weak_bonds.delete(b);
 				}
 			}
 		}
+		
 	}
 
 	removed_bonds = new Set();
@@ -273,11 +286,12 @@ function fragmentList(mol, max_ring=8) {
 	}
 	
 	let weak_bonds_update = new Set([...weak_bonds].filter(b => (!removed_bonds.has(b))));
-	
+	console.log(weak_bonds_update)
 	// 切る
 	for (let b of weak_bonds_update) {
 		mol.removeConnector(b);
 	}
+	console.log(mol)
 	const smiles = Kekule.IO.saveFormatData(mol, 'smi');
 	const fsmiles = smiles.split('.');
 	return fsmiles
@@ -311,12 +325,14 @@ function neighborIndexArray(mol) {
 		const conn = mol.getConnectorAt(i);
 		
 		const objs = conn.getConnectedObjs();
+
 		const atom0 = parseInt(objs[0].id);
 		const atom1 = parseInt(objs[1].id);
 
 		neighbors[atom0].push(atom1);
 		neighbors[atom1].push(atom0);
 	}
+
 	return neighbors;
 	
 }
@@ -341,6 +357,7 @@ function nextLevelExpressionArray(symbols, preLevelExp, neighbors, addParenthese
 			}
 		}
 	}
+
 	return nextLevelExp;
 }
 
