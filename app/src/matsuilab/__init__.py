@@ -1,3 +1,0 @@
-"""
-Matsui Lab Shared Library
-"""

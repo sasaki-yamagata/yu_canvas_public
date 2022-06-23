@@ -30,7 +30,18 @@
       <td>
         <table class="properties">
           <tr><th colspan="2">基本情報</th></tr>
-          <tr><td>予測率</td><td><span id="rate", class='rate'>-</span></td></tr>
+          <tr>
+            <td>モデル選択</td>
+            <td>
+              <form name='form'>
+                <select name='select_model'>
+                  <option value='ridge_orb'>ridge回帰</option>
+                  <option value='gcn_orb'>GCN</option>
+                </select>
+              </form>
+
+            </td>
+          </tr>
           <tr><td>化学式</td><td><span id="formula">-</span></td></tr>
           <tr><td>分子量</td><td><span id="weight">-</span></td></tr>
           <tr><th colspan="2">予測特性</th></tr>
@@ -107,3 +118,4 @@
     document.getElementById("jsme").innerHTML = "";
   </script>
 </html>
+

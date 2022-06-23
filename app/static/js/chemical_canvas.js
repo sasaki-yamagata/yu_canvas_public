@@ -14,7 +14,10 @@ function updatePrediction(event) {
 
 	const mol = Kekule.IO.loadFormatData(event.src.molFile(false), 'mol');
 	
-
+	const select_model = document.form.select_model;
+	const select_num = select_model.selectedIndex;
+	const model = select_model.options[select_num].value;
+	
 	// 原子の数が０の時とそうでないとき
 	if (mol.getNodeCount() == 0) {
 		// update table
@@ -37,52 +40,65 @@ function updatePrediction(event) {
     
 		// const weak_atom = weakAtomList(mol, weak_bond)
 		// 木構造の記述子作成
-		const symbols = symbolArray(mol);
+		// const symbols = symbolArray(mol);
 
-		const neighbors = neighborIndexArray(mol);
-		const desc1 = nextLevelExpressionArray(symbols, symbols, neighbors, false);
-		const featureValues1 = descriptorCounts(desc1);
-		const desc2 = nextLevelExpressionArray(symbols, desc1, neighbors);
-		const featureValues2 = descriptorCounts(desc2);
+		// const neighbors = neighborIndexArray(mol);
+		// const desc1 = nextLevelExpressionArray(symbols, symbols, neighbors, false);
+		// const featureValues1 = descriptorCounts(desc1);
+		// const desc2 = nextLevelExpressionArray(symbols, desc1, neighbors);
+		// const featureValues2 = descriptorCounts(desc2);
 
-		// フラグメントの記述子作成
-		const fsmiles = fragmentList(mol)
-		const featureValuesFrag = descriptorCounts(fsmiles)
+		// // フラグメントの記述子作成
+		// const fsmiles = fragmentList(mol)
+		// const featureValuesFrag = descriptorCounts(fsmiles)
 
-		// 木構造とフラグメントの記述子を合わせる
-		console.log(featureValuesFrag)
-		const feature = {...featureValues2, ...featureValuesFrag}
-		feature['weight'] = weight
-		// pythonにデータを送信
+		// // 木構造とフラグメントの記述子を合わせる
+		// console.log(featureValuesFrag)
+		// const feature = {...featureValues2, ...featureValuesFrag}
+		// feature['weight'] = weight
+		// // pythonにデータを送信
 		const molfile = new Object
 		molfile.molfile = event.src.molFile()
 		$.ajax({
 			type: "POST",
-			url: "/model",
+			url: "/predict",
 			data: molfile, // post a json data.
 			async: false,
 			dataType: "json",
 			// 成功した時の処理
 			success: function(response) {
-				let pre_orb = response
+
+				const rideg_orb = response['ridge_orb']
+				const gcn_orb = response['gcn_orb']
+				let homo;
+				let lumo;
+				if (model == 'ridge_orb') {
+					homo = rideg_orb['homo'] * -1
+					lumo = rideg_orb['lumo'] * -1
+				} else {
+					homo = gcn_orb['homo'] * -1
+					lumo = gcn_orb['lumo'] * -1
+				}
+
+				
 				
 						// predict HOMO and LUMO energies
 				let level = 2;
 						// 仮定義
-				let homo = pre_orb['homo'] * -1
-				let lumo = pre_orb['lumo'] * -1
-				let rate = pre_orb['rate']
+				// let homo = rideg_orb['homo'] * -1
+				// let lumo = rideg_orb['lumo'] * -1
+				// let rate = rideg_orb['rate']
 				
 				if (isNaN(lumo)) {
 					// document.getElementById("level").innerHTML = "n/a";
 					document.getElementById("lumo").innerHTML = "n/a";
 					document.getElementById("homo").innerHTML = "n/a";
-					document.getElementById("rate").innerHTML = "n/a"
+					// document.getElementById("rate").innerHTML = "n/a"
 				} else {
 					// document.getElementById("level").innerHTML = level;
 					document.getElementById("lumo").innerHTML = lumo.toFixed(1) + " eV";
 					document.getElementById("homo").innerHTML = homo.toFixed(1) + " eV";
-					document.getElementById("rate").innerHTML = rate.toFixed(1) + " %";
+					// document.getElementById("rate").innerHTML = rate.toFixed(1) + " %";
 				}
 				// update energy diagram
 				updateEnergyDiagram(lumo, homo);
