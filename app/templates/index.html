@@ -5,109 +5,194 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>YU_canvas</title>
+  <!-- reset.css destyle -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/destyle.css@1.0.15/destyle.css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/togle.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
-    <img src="{{ url_for('static', filename='image/chemical_canvas_full_banner.png') }}" width="800" alt="Draw & Study, Yamagata Chemical Canvas">
-    <p align="center">描いて学べる分子設計ツール「山形ケミカルキャンバス」（0.2 beta）</p>
-    <p align="center">[
-      <a href="#overview">概要</a> |
-      <a href="#terms-of-use">利用条件</a> |
-      <a href="#disclaimer">免責事項</a> |
-      <a href="#faq">よくある質問</a> |
-      <a href="#authors">開発者</a> |
-      <a href="#acknowledgements">謝辞</a> |
-      <a href="{{ url_for('index_e') }}">English</a>
-    ]</p>
-    <table class="tool"><tr>
-      <td>
-        <div id="jsme" class='jsme_design'>
-          <br>ロードしています...<br><br>
-          このプログラムはJavaScriptを使用します。<br>
-          もしロードに１分以上かかる場合は、ブラウザのJavaScriptが有効になっているか確認して下さい。
+<body> 
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-left">
+        <div class="site-img">
+          <img src="{{ url_for('static', filename='image/mol_structure.png') }}">
         </div>
-      </td>
-      <td>
-        <table class="properties">
-          <tr><th colspan="2">基本情報</th></tr>
-          <tr>
-            <td>モデル選択</td>
-            <td>
-              <form name='form'>
-                <select name='select_model'>
-                  <option value='ridge_orb'>ridge回帰</option>
-                  <option value='gcn_orb'>GCN</option>
-                </select>
-              </form>
-
-            </td>
-          </tr>
-          <tr><td>化学式</td><td><span id="formula">-</span></td></tr>
-          <tr><td>分子量</td><td><span id="weight">-</span></td></tr>
-          <tr><th colspan="2">予測特性</th></tr>
-          <tr><td>LUMO</td><td><span id="lumo">-</span></td></tr>
-          <tr><td>HOMO</td><td><span id="homo">-</span></td></tr>
-          <tr><th colspan="2">エネルギーダイアグラム</th></tr>
-          <tr><td colspan="2"><canvas id="energy_diagram" width="360" height="180">Energy diagram needs internet browser supporting HTML5.</canvas></td></tr>
-        </table>
-      </td>
-    </tr></table>
-    <div style="margin: 10px;">
-      <h3><a name="overview">概要</a></h3>
-      <p>「山形ケミカルキャンバス」は、<a href="https://matsui-lab.yz.yamagata-u.ac.jp/" target="_blank">山形大学松井研究室</a>が開発した分子設計ツールです。左のキャンバスに分子の絵（分子構造式）を描くと、右の表にその分子の特性の予測値がリアルタイムで表示されます。</p>
-      <p><b>基本的な分子の描き方</b></p>
-      <ol>
-        <li>上側・左側のパレットからベンゼン環や元素記号などのパーツを選択します。</li>
-        <li>キャンバス上にパーツを配置します。</li>
-      </ol>
-      <p>詳しい操作方法は<a href="https://peter-ertl.com/jsme/2013_03/help.html" target="_blank">JSMEヘルプページ</a>をご参照下さい。</p>
-      <h3><a name="terms-of-use">利用条件</a></h3>
-      <p>本プログラムは商用・非商用を問わず誰でも利用できますが、改変および再配布は禁止します。</p>
-      <h3><a name="disclaimer">免責事項</a></h3>
-      <p>本プログラムの予測特性の妥当性については、まだ十分に検証されていません。そのため、本プログラムの予測特性をそのまま研究目的に使用することは推奨されません。本プログラムの利用によって生じたいかなる損害についても、開発者は責任を負いません。</p>
-      <h3><a name="faq">よくある質問</a></h3>
-      
-      <ul>
-        <li>
-          <b>LUMO、HOMO、Gap、Vacuum、HSE は何を表していますか？</b><br>
-          LUMO は lowest unoccupied molecular orbital（最低空軌道）の略で、分子の電子親和力を表しています。LUMO が下にあるほど陰イオン化しやすくなります。<br>
-          HOMO は highest occupied molecular orbital（最高被占軌道）の略で、分子のイオン化エネルギーを表しています。HOMO が上にあるほど陽イオン化しやすくなります。<br>
-          Gap は LUMO と HOMO の差を表しており、Gap が小さいほど長波長の光を吸収します。<br>
-          Vacuum は真空準位、HSE は標準水素電極電位を表しています。
-        </li>
-        <li>
-          <b>どのような方法で特性を予測しているのですか？</b><br>
-          人工知能（AI）技術の一つである機械学習を利用しています。詳細は後日公開予定です。
-        </li>
-        <li>
-          <b>予測特性の精度はどのくらいですか？</b><br>
-          現段階では、密度汎関数理論（DFT）計算（B3LYP/6-31G(d,p)）に対する平均絶対誤差（MAE）が約 0.3 eV です。今後のアップデートにより改善される場合があります。
-        </li>
-        <li>
-          <b>n/a（not available）と表示されるのはなぜですか？</b><br>
-          このプログラムは開発途中のベータ版であり、全ての分子をサポートしてはいません。サポートされる分子の種類は今後のアップデートで増える場合があります。
-        </li>
-        <li>
-          <b>予測特性を科学論文や学会発表で使用できますか？</b><br>
-          本プログラムの予測特性の妥当性については、まだ十分に検証されていません。そのため、本プログラムの予測特性をそのまま研究目的に使用することは推奨されません。
-        </li>
-      </ul>
-      <h3><a name="authors">開発者</a></h3>
-      <p>
-        <a href="https://matsui-lab.yz.yamagata-u.ac.jp/" target="_blank">山形大学 高分子・有機材料工学科 松井研究室</a><br>
-        松井 弘之、岡田 智悠、望月 祐樹、佐々木 蓮<br>
-        お問い合わせ先: h-matsui[at]yz.yamagata-u.ac.jp<br>
-        ※スパムメール防止のため、半角＠を[at]にしています。
-      </p>
-      <h3><a name="acknowledgements">謝辞</a></h3>
-      <p>本プログラムは国立研究開発法人 科学技術振興機構(JST)、戦略的創造研究推進事業(CREST)「実験・計算・データ科学融合による塗布型電子材料の開発」の支援を受けて開発されました。</p>
-      <p>本プログラムは <a href="https://peter-ertl.com/jsme/" target="_blank">JSME Molecular Editor</a> と <a href="http://partridgejiang.github.io/Kekule.js/" target="_blank">Kekule.js</a> を使用しています。</p>
+        <h1 class="site-log">
+          <a href="{{ url_for('index') }}">
+            YU canvas
+          </a>
+        </h1>    
+      </div>
+      <div class="header-right">
+        <div class="lang-btn">
+          <a href="#" class="lang-ja-link">
+            <div class="lang-ja">
+              <p>ja</p>
+            </div>
+          </a>
+          <a href="{{ url_for('index_e') }}" class="lang-en-link">
+            <div class="lang-en">
+              <p>en</p>
+            </div>
+          </a>
+        </div>
+      </div>
     </div>
+  </header>
+    <div class="inner">
+      <main class="main">
+        <div class="sub-title-wrap">
+          <h2 class="sub-title">
+            描いて学べる分子設計ツール<br class="new_line">
+            「YU canvas」 (0.2 beta)
+          </h2>
+        </div>
+        <div class="draw-sec">
+          <div id="jsme">
+            <br>ロードしています...<br><br>
+            このプログラムはJavaScriptを使用します。<br>
+            もしロードに１分以上かかる場合は、ブラウザのJavaScriptが有効になっているか確認して下さい。
+          </div>
+          <div class="predict-wrap">
+            <div class="predict-btns">
+              <div class="model">
+                <form name="form">
+                  <select name="select_model" class="model-btn">
+                    <option value="ridge_orb">Ridge</option>
+                    <option value="gcn_gcn">GCN</option>
+                  </select>
+                </form>
+              </div>
+              <div class="predict">
+                <select name="predict" class="predict-btn">
+                  <option value="ridge">HOMO＆LUMO</option>
+                </select>
+              </div>
+            </div>
+            <div class="predict-table">
+              <div class="predict-sec">
+                <h3 class="table-title">基本情報</h3>
+                <div class="info-wrap">
+                  <p>化学式</p>
+                  <p id="formula">-</p>
+                </div>
+                <div class="info-wrap">
+                  <p>分子量</p>
+                  <p id="weight">-</p>
+                </div>
+              </div>
+              <div class="predict-sec">
+                <h3 class="table-title border-top">予測特性</h3>
+                <div class="info-wrap">
+                  <p>HOMO</p>
+                  <p id="homo">-</p>
+                </div>
+                <div class="info-wrap">
+                  <p >LUMO</p>
+                  <p id="lumo">-</p>
+                </div>
+              </div>
+              <div class="predict-sec">
+                <h3 class="table-title border-top">エネルギーダイアグラム</h3>
+              </div>
+              <div class="canvas-wrap">
+                <canvas id="energy_diagram" width="360" height="200">Energy diagram needs internet browser supporting HTML5.</canvas>
+              </div>
+            </div>
+          </div>
+      </main>
+      <div class="description-sec">    
+        <div class="block" data-collapsible>
+          <div class="block__title"><h3>概要</h3></div>
+          <div class="block__content">
+            <p>「山形ケミカルキャンバス」は、<a href="https://matsui-lab.yz.yamagata-u.ac.jp/" target="_blank">山形大学松井研究室</a>が開発した分子設計ツールです。左のキャンバスに分子の絵（分子構造式）を描くと、右の表にその分子の特性の予測値がリアルタイムで表示されます。</p> 
+          </div>
+        </div>
+      
+        <div class="block" data-collapsible>
+          <div class="block__title"><h3>使い方</h3></div>
+          <div class="block__content">
+            <ol class="usage-list">
+              <li>1. 機械学習モデルを選択します。</li>
+              <li>2. 予測特性を選択します。（現在HOMO＆LUMOのみ）</li>
+              <li>3. 上側・左側のパレットからベンゼン環や元素記号などのパーツを選択します。</li>
+              <li>4. キャンバス上にパーツを配置します。</li>
+              <li>5. 予測値が出力される</li>
+            </ol>
+            <p class="usage">詳しい操作方法は<a href="https://peter-ertl.com/jsme/2013_03/help.html" target="_blank">JSMEヘルプページ</a>をご参照下さい。</p>
+          </div>
+        </div>
+        <div class="block faq" data-collapsible>
+          <div class="block__title"><h3>FAQ</h3></div>
+          <div class="block__content">
+            <p>
+              <dl class="faq">
+                <dt class="faq__dt">LUMO、HOMO、Gap、Vacuum、HSE は何を表していますか？</dt>
+                <dd class="faq__dd">LUMO は lowest unoccupied molecular orbital（最低空軌道）の略で、分子の電子親和力を表しています。LUMO が下にあるほど陰イオン化しやすくなります。<br>
+                  HOMO は highest occupied molecular orbital（最高被占軌道）の略で、分子のイオン化エネルギーを表しています。HOMO が上にあるほど陽イオン化しやすくなります。<br>
+                  Gap は LUMO と HOMO の差を表しており、Gap が小さいほど長波長の光を吸収します。<br>
+                  Vacuum は真空準位、HSE は標準水素電極電位を表しています。</dd>
+              </dl>
+            </p>
+            <p>
+              <dl class="faq">
+                <dt class="faq__dt">どのような方法で特性を予測しているのですか？</dt>
+                <dd class="faq__dd">人工知能（AI）技術の一つである機械学習を利用しています。詳細は後日公開予定です。</dd>
+              </dl>
+            </p>
+            <p>
+              <dl class="faq">
+                <dt class="faq__dt">予測特性の精度はどのくらいですか？</dt>
+                <dd class="faq__dd">現段階では、密度汎関数理論（DFT）計算（B3LYP/6-31G(d,p)）に対する平均絶対誤差（MAE）が約 0.3 eV です。今後のアップデートにより改善される場合があります。</dd>
+              </dl>
+            </p>
+            <p>
+              <dl class="faq">
+                <dt class="faq__dt">n/a（not available）と表示されるのはなぜですか？</dt>
+                <dd class="faq__dd">このプログラムは開発途中のベータ版であり、全ての分子をサポートしてはいません。サポートされる分子の種類は今後のアップデートで増える場合があります。</dd>
+              </dl>
+            </p>
+            <p>
+              <dl class="faq">
+                <dt class="faq__dt">予測特性を科学論文や学会発表で使用できますか？</dt>
+                <dd class="faq__dd">本プログラムの予測特性の妥当性については、まだ十分に検証されていません。そのため、本プログラムの予測特性をそのまま研究目的に使用することは推奨されません。</dd>
+              </dl>
+            </p>
+          </div>
+        </div>
+        <div class="block" data-collapsible>
+          <div class="block__title"><h3>開発者</h3></div>
+          <div class="block__content">
+            <p>
+              <a href="https://matsui-lab.yz.yamagata-u.ac.jp/" target="_blank">山形大学 高分子・有機材料工学科 松井研究室</a><br>
+              松井 弘之、岡田 智悠、望月 祐樹、佐々木 蓮<br>
+              お問い合わせ先: h-matsui[at]yz.yamagata-u.ac.jp<br>
+              ※スパムメール防止のため、半角＠を[at]にしています。
+            </p>
+          </div>
+        </div>
+        <div class="block" data-collapsible>
+          <div class="block__title"><h3>免責事項</h3></div>
+          <div class="block__content">
+            <p>本プログラムの予測特性の妥当性については、まだ十分に検証されていません。そのため、本プログラムの予測特性をそのまま研究目的に使用することは推奨されません。本プログラムの利用によって生じたいかなる損害についても、開発者は責任を負いません。</p>
+          </div>
+        </div>
+        <div class="block" data-collapsible>
+          <div class="block__title"><h3>謝辞</h3></div>
+          <div class="block__content">
+            <p class="acknowledgements">本プログラムは国立研究開発法人 科学技術振興機構(JST)、戦略的創造研究推進事業(CREST)「実験・計算・データ科学融合による塗布型電子材料の開発」の支援を受けて開発されました。<br>
+            本プログラムは <a href="https://peter-ertl.com/jsme/" target="_blank">JSME Molecular Editor</a> と <a href="http://partridgejiang.github.io/Kekule.js/" target="_blank">Kekule.js</a> を使用しています。</p>
+          </div>
+        </div>   
+      </div>
     
-    <footer>
-      <small>&copy; 2021 Yamagata University</small>
-    </footer>
+      <footer class="footer">
+        <small>&copy; 2021 Yamagata University</small>
+      </footer>
+    </div>
   </body>
+  <script src="{{ url_for('static', filename='js/collapsible.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/demo.js') }}"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/jsme/jsme.nocache.js') }}"></script>

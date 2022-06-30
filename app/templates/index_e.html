@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YU_canvas</title>
+  <!-- reset.css destyle -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/destyle.css@1.0.15/destyle.css"/>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/togle.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style_en.css') }}">
+</head>
+<body> 
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-left">
+        <div class="site-img">
+          <img src="{{ url_for('static', filename='image/mol_structure.png') }}">
+        </div>
+        <h1 class="site-log">
+          <a href="{{ url_for('index') }}">
+            YU canvas
+          </a>
+        </h1>    
+      </div>
+      <div class="header-right">
+        <div class="lang-btn">
+          <a href="{{ url_for('index') }}" class="lang-ja-link">
+            <div class="lang-ja">
+              <p>ja</p>
+            </div>
+          </a>
+          <a href="#" class="lang-en-link">
+            <div class="lang-en">
+              <p>en</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+    <div class="inner">
+      <main class="main">
+        <div class="sub-title-wrap">
+          <h2 class="sub-title">
+            Draw & Study,<br class="new_line">
+            「YU canvas」 (0.2 beta)
+          </h2>
+        </div>
+        <div class="draw-sec">
+          <div id="jsme">
+            <br>Now Loading...<br><br>
+            This program uses JavaScript.<br>
+            If loading takes more than a minute, please check if JavaScript is enabled in the browser.
+          </div>
+          <div class="predict-wrap">
+            <div class="predict-btns">
+              <div class="model">
+                <form name="form">
+                  <select name="select_model" class="model-btn">
+                    <option value="ridge_orb">Ridge</option>
+                    <option value="gcn_gcn">GCN</option>
+                  </select>
+                </form>
+              </div>
+              <div class="predict">
+                <select name="predict" class="predict-btn">
+                  <option value="ridge">HOMO＆LUMO</option>
+                </select>
+              </div>
+            </div>
+            <div class="predict-table">
+              <div class="predict-sec">
+                <h3 class="table-title">Basic Information</h3>
+                <div class="info-wrap">
+                  <p>Chemical Formula</p>
+                  <p id="formula">-</p>
+                </div>
+                <div class="info-wrap">
+                  <p>Molecular Weight</p>
+                  <p id="weight">-</p>
+                </div>
+              </div>
+              <div class="predict-sec">
+                <h3 class="table-title border-top">Predicted Properties</h3>
+                <div class="info-wrap">
+                  <p>HOMO</p>
+                  <p id="homo">-</p>
+                </div>
+                <div class="info-wrap">
+                  <p >LUMO</p>
+                  <p id="lumo">-</p>
+                </div>
+              </div>
+              <div class="predict-sec">
+                <h3 class="table-title border-top">Energy Diagram</h3>
+              </div>
+              <div class="canvas-wrap">
+                <canvas id="energy_diagram" width="360" height="200">Energy diagram needs internet browser supporting HTML5.</canvas>
+              </div>
+            </div>
+          </div>
+      </main>
+      <div class="description-sec">    
+        <div class="block" data-collapsible>
+          <div class="block__title"><h3>Overview</h3></div>
+          <div class="block__content">
+            <p><i>"YU canvas"</i> is a software for designing functional molecules, developed by <a href="https://matsui-lab.yz.yamagata-u.ac.jp/" target="_blank">Matsui laboratory at Yamagata University, Japan</a>. You can draw molecules in the left-side canvas, and see the predicted properties immediately in the right-side table.</p>
+          </div>
+        </div>
+      
+        <div class="block" data-collapsible>
+          <div class="block__title"><h3>How to Draw Molecules</h3></div>
+          <div class="block__content">
+            <ol class="usage-list">
+              <li>1. Select a machine learning model.</li>
+              <li>2. Select the predictive characteristics. (currently HOMO & LUMO only)</li>
+              <li>3. Choose one of the parts such as benzene ring.</li>
+              <li>4. Place the part in the white canvas.</li>
+              <li>5. Predicted values are output</li>
+            </ol>
+            <p>See <a href="https://peter-ertl.com/jsme/2013_03/help.html" target="_blank">JSME help page</a> for details.</p>
+          </div>
+        </div>
+        <div class="block faq" data-collapsible>
+          <div class="block__title"><h3>FAQ</h3></div>
+          <div class="block__content">
+            <p>
+              <dl class="faq">
+                <dt class="faq__dt">What are LUMO, HOMO, Gap, Vacuum, and HSE?</dt>
+                <dd class="faq__dd">LUMO stands for lowest unoccupied molecular orbital, and represents electron affinity.<br>
+                  HOMO stands for highest occupied molecular orbital, and represents ionization potential.<br>
+                  Gap is the different between LUMO and HOMO, and is related to optical absorption and emission.<br>
+                  Vacuum is vacuum level.<br>
+                  HSE is hydrogen standard electrode potential in electrochemistry.</dd>
+              </dl>
+            </p>
+            <p>
+              <dl class="faq">
+                <dt class="faq__dt">How does it predict the properties?</dt>
+                <dd class="faq__dd">It uses machine learning of artificial intelligence (AI). The details will be published in near future.</dd>
+              </dl>
+            </p>
+            <p>
+              <dl class="faq">
+                <dt class="faq__dt">How accurate the predicted properties are?</dt>
+                <dd class="faq__dd">	The mean absolute error (MAE) with respect to density functional theory (DFT) calculation of B3LYP/6-31G(d,p) is 0.3 eV at present. Future updates would improve the accuracy.</dd>
+              </dl>
+            </p>
+            <p>
+              <dl class="faq">
+                <dt class="faq__dt">Why does it show "n/a" (not available)?</dt>
+                <dd class="faq__dd">This program is under development, and does not support all molecules. Future updates would extend the supported molecules.</dd>
+              </dl>
+            </p>
+            <p>
+              <dl class="faq">
+                <dt class="faq__dt">Can we use the predicted properties for scientific publications?</dt>
+                <dd class="faq__dd">It is NOT recommended to use the predicted properties for scientific publications because the validity of the predicted properties is not guaranteed.</dd>
+              </dl>
+            </p>
+          </div>
+        </div>
+        <div class="block" data-collapsible>
+          <div class="block__title"><h3>Authors</h3></div>
+          <div class="block__content">
+            <p>
+              <a href="https://matsui-lab.yz.yamagata-u.ac.jp/" target="_blank">Matsui Laboratory, Research Center for Organic Electronics (ROEL), Yamagata University</a><br>
+              Hiroyuki Matsui, Tomoharu Okada, Yuki Mochizuki, Ren Sasaki<br>
+              E-mail: h-matsui[at]yz.yamagata-u.ac.jp<br>
+              * Please replace [at] with @.
+            </p>
+          </div>
+        </div>
+        <div class="block" data-collapsible>
+          <div class="block__title"><h3>Disclaimer</h3></div>
+          <div class="block__content">
+            <p>The validity of the predicted properties is not guaranteed. It is NOT recommended to use the predicted properties for scientific publications. The authors is not responsible for any results from this program.</p>
+          </div>
+        </div>
+        <div class="block" data-collapsible>
+          <div class="block__title"><h3>Acknowledgements</h3></div>
+          <div class="block__content">
+            <p>This work was supported by JST, CREST, Grand Number JPMJCR18J2.<br>
+		        This program uses <a href="https://peter-ertl.com/jsme/" target="_blank">JSME Molecular Editor</a> and <a href="http://partridgejiang.github.io/Kekule.js/" target="_blank">Kekule.js</a>.
+          </div>
+        </div>   
+      </div>
+    
+      <footer class="footer">
+        <small>&copy; 2021 Yamagata University</small>
+      </footer>
+    </div>
+  </body>
+  <script src="{{ url_for('static', filename='js/collapsible.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/demo.js') }}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/jsme/jsme.nocache.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/kekule/kekule.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/chemical_canvas.js') }}"></script>
+  <script>
+    // javaScriptが読み込まれた後にロード文を消す
+    document.getElementById("jsme").innerHTML = "";
+  </script>
+</html>
+

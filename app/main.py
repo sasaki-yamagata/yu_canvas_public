@@ -14,11 +14,14 @@ def index():
     return render_template(
       'index.html'
     ) 
+
+
 @app.route('/en')
 def index_e():
     return render_template(
-      'index-e.html'
+      'index_e.html'
     )
+
 
 
 @app.route("/predict", methods=["POST"])
@@ -30,15 +33,15 @@ def predict():
     ridge_orb = RidgeOrb(molfile_dic)
     js_feature = ridge_orb.makeFeature()
     ridge_predict_orb = ridge_orb.predict(js_feature, ml_feature)
-    print(ridge_predict_orb)
+    # print(ridge_predict_orb)
     
     # GCNの予測値
     gcn_orb = GcnOrb(molfile_dic)
     gcn_predict_orb = gcn_orb.predict()
-    print(gcn_predict_orb)
+    # print(gcn_predict_orb)
     
     response = {'ridge_orb' : ridge_predict_orb, 'gcn_orb' : gcn_predict_orb}
-    print(response)
+    # print(response)
     # for molfile in molfile_dic.values():
     #     if Chem.MolFromMolBlock(molfile) is None:
     #         return None, None

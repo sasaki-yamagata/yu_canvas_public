@@ -1,0 +1,20 @@
+@charset "UTF-8";
+
+.lang-ja {
+  background-color: #4bb9cf;
+}
+
+.lang-en {
+  background-color: #048fab;
+}
+
+.lang-en-link:hover {
+  opacity: 1;
+}
+
+.lang-ja-link:hover {
+  opacity: 0.8;
+}
+#weight, #formula {
+  line-height: 48px;
+}

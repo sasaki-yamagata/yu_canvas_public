@@ -3,7 +3,13 @@
 // Copyright (c) 2019 Yamagata University
 // This function will be called after the JavaScriptApplet code has been loaded.
 function jsmeOnLoad() {
-	jsmeApplet = new JSApplet.JSME("jsme", "400px", "400px", {"options" : "oldlook,star"});
+	
+	if (window.matchMedia('(max-width: 500px)').matches) {
+		jsmeApplet = new JSApplet.JSME("jsme", "310px", "310px", {"options" : "oldlook,star"});
+	} else if (window.matchMedia('(min-width:500px)').matches) {
+		jsmeApplet = new JSApplet.JSME("jsme", "458px", "458px", {"options" : "oldlook,star"});
+	}
+	
 	jsmeApplet.setAfterStructureModifiedCallback(updatePrediction);
 	// console.log(jsmeApplet.molFile())
 }
@@ -131,8 +137,8 @@ function updateEnergyDiagram(lumo, homo) {
 	if (diagram && diagram.getContext) {
 		let c = diagram.getContext("2d");
 		let x0 = 125; // origin
-		let y0 = 30; // origin
-		let s = 20; // scale
+		let y0 = 50; // origin
+		let s = 18; // scale
 		let x, y;
 
 		c.clearRect(0, 0, diagram.width, diagram.height);

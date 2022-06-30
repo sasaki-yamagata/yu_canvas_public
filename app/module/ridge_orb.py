@@ -219,11 +219,11 @@ class RidgeOrb(MolInfo):
             if js_f in ml_feature:
                 ml_feature[js_f] = js_feature[js_f]
                 match_count += 1
-                print(f'matching: {js_f}')
-            else:
-                print(f'No match: {js_f}')
+                # print(f'matching: {js_f}')
+            # else:
+                # print(f'No match: {js_f}')
         rate = (match_count / len(js_feature)) * 100
-        print(rate)
+        # print(rate)
         
                 
         # 個数のみの配列を作成し、モデルに挿入
