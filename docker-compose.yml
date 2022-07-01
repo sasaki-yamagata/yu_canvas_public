@@ -8,3 +8,4 @@ services:
     volumes:
       - './app:/app'
     tty: true
+    command: ["python", "main.py"]
