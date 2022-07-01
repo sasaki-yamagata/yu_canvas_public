@@ -134,11 +134,13 @@ body {
 
 .predict-wrap {
   background-color: white;
-  width: 380px;
+  width: 390px;
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
   border-radius: 10px;
   padding: 10px;
   font-size: 1.6rem;
+  height: 458px;
+  overflow: scroll;
  
 
 }
@@ -238,6 +240,7 @@ body {
   border: 1px solid #E1DFDF;
   border-radius: 10px;
   text-align: center;
+  
 }
 
 .info-wrap {
